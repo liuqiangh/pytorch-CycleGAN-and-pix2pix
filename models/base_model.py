@@ -43,7 +43,7 @@ class BaseModel(ABC):
         self.image_paths = []
         self.metric = 0  # used for learning rate policy 'plateau'
 
-    @staticmethod
+    @staticmethod  #该类函数不需要self来传递类实例对象
     def modify_commandline_options(parser, is_train):
         """Add new model-specific options, and rewrite default values for existing options.
 
@@ -56,7 +56,7 @@ class BaseModel(ABC):
         """
         return parser
 
-    @abstractmethod
+    @abstractmethod #子类必须重写该类函数，否则程序报错
     def set_input(self, input):
         """Unpack input data from the dataloader and perform necessary pre-processing steps.
 
@@ -126,10 +126,10 @@ class BaseModel(ABC):
 
     def get_current_visuals(self):
         """Return visualization images. train.py will display these images with visdom, and save the images to a HTML"""
-        visual_ret = OrderedDict()
+        visual_ret = OrderedDict()#按存入的顺序输出
         for name in self.visual_names:
             if isinstance(name, str):
-                visual_ret[name] = getattr(self, name)
+                visual_ret[name] = getattr(self, name) #返回对象的属性值
         return visual_ret
 
     def get_current_losses(self):

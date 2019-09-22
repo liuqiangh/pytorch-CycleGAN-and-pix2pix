@@ -23,7 +23,7 @@ def find_dataset_using_name(dataset_name):
     and it is case-insensitive.
     """
     dataset_filename = "data." + dataset_name + "_dataset"
-    datasetlib = importlib.import_module(dataset_filename)  # 导入EHR_dataset模块
+    datasetlib = importlib.import_module(dataset_filename)
 
     dataset = None
     target_dataset_name = dataset_name.replace('_', '') + 'dataset'
@@ -33,8 +33,7 @@ def find_dataset_using_name(dataset_name):
             dataset = cls
 
     if dataset is None:
-        raise NotImplementedError("In %s.py, there should be a subclass of BaseDataset with class name that matches %s in lowercase." % (
-            dataset_filename, target_dataset_name))
+        raise NotImplementedError("In %s.py, there should be a subclass of BaseDataset with class name that matches %s in lowercase." % (dataset_filename, target_dataset_name))
 
     return dataset
 
@@ -75,10 +74,9 @@ class CustomDatasetDataLoader():
         print("dataset [%s] was created" % type(self.dataset).__name__)
         self.dataloader = torch.utils.data.DataLoader(
             self.dataset,
-            batch_size=1,
-            shuffle=True,
-            drop_last=True)
-        # shuffle表示是否要打乱数据
+            batch_size=opt.batch_size,
+            shuffle=not opt.serial_batches,
+            num_workers=int(opt.num_threads))
 
     def load_data(self):
         return self
